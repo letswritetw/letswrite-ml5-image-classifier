@@ -2,4 +2,4 @@
 
 Demo：[demo](https://letswritetw.github.io/letswrite-ml5-image-classifier/)
 
-筆記文：[Let's Write](https://letswrite.tw/ml5-image-classifier/)
+筆記文：[Let's Write](https://www.letswrite.tw/ml5-image-classifier/)
