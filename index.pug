@@ -131,7 +131,7 @@ html(lang="zh-Hant")
           img.icon(src="upload.svg", alt="上傳檔案")
           span.inline-block.ml-2.text-xl.text-neutral-700 選擇圖檔
       
-      section.relative.mx-auto.flex.w-96.flex-col.rounded-xl.bg-white.bg-clip-border.text-gray-700.shadow-md(v-show="!!results")
+      section.relative.mx-auto.flex.max-w-96.flex-col.rounded-xl.bg-white.bg-clip-border.text-gray-700.shadow-md(v-show="!!results")
         .relative.mx-4.-mt-6.overflow-hidden.rounded-xl.bg-blue-gray-500.bg-clip-border.text-white.shadow-lg(class='shadow-blue-gray-500/40')
           img(:src="imgSrc", ref="img")
         .p-6

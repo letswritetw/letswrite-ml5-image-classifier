@@ -19,8 +19,8 @@
     <meta property="og:image:width" content="1200"/>
     <meta property="og:image:height" content="630"/>
     <meta property="og:image:alt" content="ml5.js 開發神經網路圖像辨識"/>
-    <link rel="shortcut icon" href="https://letswritetw.github.io/letswritetw/dist/img/logo_512.png"/>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="https://letswritetw.github.io/letswritetw/dist/img/logo_512.png?ckcachebust=727713869"/>
+    <script src="https://cdn.tailwindcss.com?ckcachebust=53B7E0C722494B606239078E112CBC86"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -116,7 +116,7 @@
         <input class="hidden" id="customFileInput" type="file" @change="aiPredict" accept="image/*"/>
         <label class="flex justify-center items-center bg-white rounded-full cursor-pointer" for="customFileInput"><img class="icon" src="upload.svg" alt="上傳檔案"/><span class="inline-block ml-2 text-xl text-neutral-700">選擇圖檔</span></label>
       </section>
-      <section class="relative mx-auto flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md" v-show="!!results">
+      <section class="relative mx-auto flex max-w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md" v-show="!!results">
         <div class="relative mx-4 -mt-6 overflow-hidden rounded-xl bg-blue-gray-500 bg-clip-border text-white shadow-lg shadow-blue-gray-500/40"><img :src="imgSrc" ref="img"/></div>
         <div class="p-6">
           <h5 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">辨識結果</h5>
@@ -127,8 +127,8 @@
       </section>
       <hr class="my-8 mx-auto max-w-3xl border-t border-gray-500 border-dashed"/>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.15/vue.global.prod.min.js"></script>
-    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.15/vue.global.prod.min.js?ckcachebust=727713870"></script>
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js?ckcachebust=727713870"></script>
     <script>
       const { createApp, markRaw } = Vue;
       const App = {
