@@ -1,32 +1,40 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>ml5.js 開發神經網路圖像辨識 - August - Let's Write</title>
-    <link rel="canonical" href="https://letswritetw.github.io/medium-ml5-image-classifier/"/>
-    <meta property="fb:app_id" content="484081328635964"/>
-    <meta property="og:url" content="https://letswritetw.github.io/medium-ml5-image-classifier/"/>
+    <link rel="canonical" href="https://www.letswrite.tw/ml5-image-classifier/"/>
+    <meta property="og:url" content="https://letswritetw.github.io/letswrite-ml5-image-classifier/"/>
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content="Let's Write"/>
-    <meta property="og:title" content="ml5.js 開發神經網路圖像辨識 - Let's Write"/>
-    <meta property="og:description" content="ml5.js 開發神經網路圖像辨識 - Let's Write"/>
-    <meta property="og:image" content="https://letswritetw.github.io/medium-ml5-image-classifier/fb.jpg"/>
+    <meta property="og:title" content="ml5.js 開發神經網路圖像辨識 - Augustus - Let's Write"/>
+    <meta itemprop="name" content="ml5.js 開發神經網路圖像辨識 - Augustus - Let's Write"/>
+    <meta name="description" content="本文介紹如何使用 Vue.js 結合 ml5.js 和 File API 創建圖像識別應用。探索從基本設置到解決常見問題的詳細步驟，並查看實際的示例 Demo。"/>
+    <meta property="og:description" content="本文介紹如何使用 Vue.js 結合 ml5.js 和 File API 創建圖像識別應用。探索從基本設置到解決常見問題的詳細步驟，並查看實際的示例 Demo。"/>
+    <meta itemprop="description" content="本文介紹如何使用 Vue.js 結合 ml5.js 和 File API 創建圖像識別應用。探索從基本設置到解決常見問題的詳細步驟，並查看實際的示例 Demo。"/>
+    <meta itemprop="image" content="https://letswritetw.github.io/letswrite-ml5-image-classifier/fb.jpg?v=20240123"/>
+    <meta property="og:image" content="https://letswritetw.github.io/letswrite-ml5-image-classifier/fb.jpg?v=20240123"/>
     <meta property="og:image:width" content="1200"/>
     <meta property="og:image:height" content="630"/>
+    <meta property="og:image:alt" content="ml5.js 開發神經網路圖像辨識"/>
     <link rel="shortcut icon" href="https://letswritetw.github.io/letswritetw/dist/img/logo_512.png"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
-    <style>
-      *, *::before, *::after {
-        box-sizing: border-box;
-      }
-      body {
-        background: #F5F5F5;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "微軟正黑體", "Microsoft JhengHei";
-        color: #555;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              main: '#42A6F7',
+              mainHover: '#167FFF'
+            }
+          }
+        }
       }
       
+    </script>
+    <style>
       /* loading mask */
       .loading-box {
         position: fixed;
@@ -70,151 +78,13 @@
         animation: loading 0.46s linear infinite;
       }
       
-      .container {
-        display: flex;
-        justify-content: center;
-        align-content: center;
-        flex-wrap: wrap;
-        margin-right: auto;
-        margin-left: auto;
-        padding-top: 5vh;
-        max-width: 80vw;
-      }
-      .container > section {
-        margin-bottom: 32px;
-        width: 100%;
-      }
-      h1, h2, h6, hr {
-        margin: 0;
-        text-align: center;
-      }
-      h1 {
-        font-size: 28px;
-      }
-      h6 {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        font-size: 14px;
-      }
-      h6 a {
-        text-decoration: none;
-        color: #00A7E5;
-      }
-      h6 a:hover {
-        color: #008BBF;
-      }
-      .divider {
-        margin-bottom: 32px;
-        width: 100%;
-        border: 0;
-        border-bottom: 1px solid #ccc;
-      }
-      .button {
-        margin-right: auto;
-        margin-left: auto;
-        max-width: 300px;
-      }
-      input {
-        display: none;
-      }
       label {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         margin-bottom: 32px;
         padding: 8px 24px;
-        background: #FFF;
-        border: 1px solid #CCC;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: box-shadow .4s ease;
-      }
-      label:hover {
-        box-shadow: 0 10px 20px rgba(0, 0, 0, .19), 0 6px 6px rgba(0, 0, 0, .23);
-      }
-      label span {
-        margin-left: 12px;
-        font-size: 24px;
-      }
-      .result-box {
-        display: flex;
-        padding: 24px 16px;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24);
-      }
-      .img {
-        width: 70%;
-      }
-      .img img {
-        display: block;
-        margin-right: auto;
-        margin-left: auto;
-        max-width: 100%;
-      }
-      .predict {
-        padding-left: 16px;
-        width: 30%;
-      }
-      .predict .card:last-of-type {
-        border-bottom-color: #FFF;
-      }
-      .card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 16px;
-        padding-bottom: 16px;
-        border-bottom: 1px solid #eee;
-      }
-      h2 {
-        margin-bottom: 24px;
-      }
-      .title {
-        width: 80%;
-        font-size: 20px;
-      }
-      .confidence {
-        width: 20%;
-        text-align: center;
-        font-size: 36px;
-        color: #808080;
       }
       
-      @media screen and (max-width: 1440px) {
-        .container {
-          max-width: 90vw;
-        }
-      }
-      @media screen and (max-width: 1279px) {
-        .container {
-          max-width: 100%;
-        }
-        .result-box {
-          flex-wrap: wrap;
-        }
-        .img, .predict {
-          width: 100%;
-        }
-        .img {
-          margin-bottom: 32px;
-        }
-      }
-      @media screen and (max-width: 480px) {
-        .predict {
-          padding-left: 0;
-        }
-        .card {
-          flex-wrap: wrap;
-        }
-        .title, .confidence {
-          padding-right: 8px;
-          padding-left: 8px;
-          width: 100%;
-        }
-        .confidence {
-          text-align: right;
-        }
+      .js-append-links a {
+        color: rgba(255, 255, 255, .6) !important;
       }
       
     </style>
@@ -225,88 +95,88 @@
       j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','GTM-PGQ9WQT');
-      
     </script>
   </head>
-  <body>
+  <body class="bg-neutral-800 text-white">
     <!-- Google Tag Manager (noscript)-->
     <noscript>
       <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PGQ9WQT" height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
-    <div class="container" id="app">
-      <section class="loading-box" :class="{ 'fade': ready }">
+    <div class="container mx-auto p-8" id="app">
+      <section class="loading-box z-10" :class="{ 'fade': ready }">
         <div class="loading"></div>
-        <div class="text">Neural Networks loading</div>
+        <div class="text">ml5.js loading</div>
       </section>
-      <section class="title-box">
-        <h1>ml5.js imageClassifier 神經網路圖像識別</h1>
-        <h6>筆記文：<a href="https://letswrite.tw/ml5-image-classifier/" target="_blank">Let's Write</a></h6>
+      <div class="text-center">
+        <h1 class="mb-4 font-bold text-4xl">ml5.js 開發神經網路圖像辨識</h1>
+        <p>筆記文：<a class="text-main hover:text-mainHover" href="https://www.letswrite.tw/ml5-image-classifier/">Let's Write</a></p>
+      </div>
+      <hr class="my-8 mx-auto max-w-3xl border-t border-gray-500 border-dashed"/>
+      <section class="mx-auto mb-14 max-w-48">
+        <input class="hidden" id="customFileInput" type="file" @change="aiPredict" accept="image/*"/>
+        <label class="flex justify-center items-center bg-white rounded-full cursor-pointer" for="customFileInput"><img class="icon" src="upload.svg" alt="上傳檔案"/><span class="inline-block ml-2 text-xl text-neutral-700">選擇圖檔</span></label>
       </section>
-      <hr class="divider"/>
-      <section class="button-box">
-        <div class="button">
-          <input id="customFileInput" type="file" @change="aiPredict" accept="image/*"/>
-          <label for="customFileInput"><img class="icon" src="upload.svg" alt="上傳檔案"/><span>選擇圖檔</span></label>
+      <section class="relative mx-auto flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md" v-show="!!results">
+        <div class="relative mx-4 -mt-6 overflow-hidden rounded-xl bg-blue-gray-500 bg-clip-border text-white shadow-lg shadow-blue-gray-500/40"><img :src="imgSrc" ref="img"/></div>
+        <div class="p-6">
+          <h5 class="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">辨識結果</h5>
+          <ul class="block font-sans text-base font-light leading-relaxed text-inherit antialiased">
+            <li v-for="r in results"><strong>{{ r.label }}：</strong><span>{{ (r.confidence * 100).toFixed() }}%</span></li>
+          </ul>
         </div>
       </section>
-      <section class="result-box" v-show="file !== null">
-        <div class="img">
-          <h2>圖檔</h2><img id="img" :src="img" ref="img"/>
-        </div>
-        <div class="predict">
-          <h2>辨識結果</h2>
-          <div class="card" v-for="r in results">
-            <div class="title">{{ r.label }}</div>
-            <div class="confidence">{{ (r.confidence * 100).toFixed() }}%</div>
-          </div>
-        </div>
-      </section>
+      <hr class="my-8 mx-auto max-w-3xl border-t border-gray-500 border-dashed"/>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
-    <script src="https://unpkg.com/ml5@0.3.1/dist/ml5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.15/vue.global.prod.min.js"></script>
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
     <script>
-      const Img = new Vue({
-        el: '#app',
-        data: {
-          classifier: null, // 圖像識別模型
-          ready: false, // AI準備好了沒
-          file: null, // input file
-          img: null, // 上傳的圖檔
-          results: null // AI預測結果
+      const { createApp, markRaw } = Vue;
+      const App = {
+        data() {
+          return {
+            classifier: null, // 圖像識別模型
+            ready: false, // AI 準備好了沒
+            imgSrc: null, // 上傳的圖檔
+            results: null // AI 預測結果
+          }
         },
         methods: {
-          // 載入圖像識別模型的callback
+          // 載入圖像識別模型的 callback
           aiReady() {
             this.ready = true;
             setTimeout(() => {
               document.querySelector('.loading-box').remove()
-            }, 500);
+            }, 250);
           },
       
           // 上傳圖片後執行判斷
           aiPredict(e) {
       
             // 抓上傳的圖檔
-            this.file = e.target.files[0];
-            this.img = URL.createObjectURL(this.file);
-            this.img.width = this.$refs.img.width; // 設圖片寬
-            this.img.height = this.$refs.img.height; // 設圖片高
+            this.imgSrc = URL.createObjectURL(e.target.files[0]);
+            const imageElement = this.$refs.img;
       
             // 圖片讀取完，再讓AI判斷
-            this.$refs.img.addEventListener('load', e => {
-              this.classifier.predict(this.$refs.img, (err, results) => {
-                console.log(results);
+            imageElement.addEventListener('load', e => {
+              this.classifier.classify(imageElement, (err, results) => {
+                if (err) {
+                  console.error(err);
+                  return;
+                }
                 this.results = results;
               });
             });
       
           }
         },
-        created() {
-          // 載入圖像識別模型：MobileNet、Darknet、Darknet-tiny
-          this.classifier = ml5.imageClassifier('MobileNet', this.aiReady);
+        mounted() {
+          // 載入圖像識別模型：MobileNet, Darknet, Darknet-tiny, DoodleNet
+          const classifier = ml5.imageClassifier('MobileNet', this.aiReady);
+          this.classifier = markRaw(classifier);
         }
-      })
+      }
+      
+      createApp(App).mount('#app');
     </script>
   </body>
 </html>
